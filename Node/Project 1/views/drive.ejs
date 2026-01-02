@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Drive</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.7.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body
+    class="relative bg-zinc-800 text-white p-10 w-full h-screen overflow-x-hidden"
+  >
+    <a href="/user"
+      ><button class="bg-zinc-600 rounded p-2 hover:bg-zinc-700">
+        Home Page
+      </button></a
+    >
+    <a href="/user/community"
+      ><button class="bg-zinc-600 rounded p-2 hover:bg-zinc-700">
+        Community
+      </button></a
+    >
+    <div class="heroSection pointer-events-none absolute flex justify-center items-center w-full h-full">
+
+      <h1 class="text-9xl text-zinc-600 font-bold">Drive</h1>
+    </div>
+    <div
+      class="bg-zinc-700 w-1/2 h-1/2 absolute p-10 rounded flex flex-col gap-4"
+    >
+      <div
+        class="bg-zinc-900 flex-1 border-2 border-white p-2 rounded-lg cursor-pointer hover:bg-zinc-950 flex flex-col justify-center items-center"
+        onclick="fileUploader()"
+      >
+        <i class="ri-upload-cloud-fill text-5xl"></i>
+        <p>Upload Your File Here</p>
+
+        <p id="sp" class="mt-2 hidden">
+          Selected File:
+          <span id="fileNameHere" class="text-zinc-500"></span>
+        </p>
+      </div>
+
+      <input
+        id="upload-input"
+        style="display: none"
+        value="none"
+        type="file"
+        accept="image/png, image/jpeg"
+      />
+
+      <div id="uploadBtns" class="btns hidden w-full flex">
+        <form
+          id="fileUploaderForm"
+          class="w-full h-full"
+          action="/drive/upload-file"
+          method="post"
+          enctype="multipart/form-data"
+        >
+          <button
+            id="upload-Confirm"
+            class="bg-indigo-600 w-1/2 p-2 cursor-pointer hover:bg-indigo-700 rounded"
+          >
+            Upload
+          </button>
+        </form>
+        <button
+        type="button"
+          onclick="upload_Remove(event)"
+          id="upload-Remove"
+          class="bg-red-600 w-1/2 p-2 cursor-pointer hover:bg-red-700 rounded"
+        >
+          Remove
+        </button>
+      </div>
+    </div>
+    <script>
+      const input = document.getElementById("upload-input");
+      const SelectedFile = document.getElementById("sp");
+      const span = document.getElementById("fileNameHere");
+      const uploadConfirm = document.getElementById("upload-Confirm");
+      const uploadRemove = document.getElementById("upload-Remove");
+      const uploadConfirmationBtns = document.getElementById("uploadBtns");
+      const form = document.getElementById("fileUploaderForm");
+      let fileNameExtracter = () => {
+        SelectedFile.classList.remove("hidden");
+        let fileName = input.files[0].name;
+        span.textContent = fileName;
+      };
+      function fileUploader() {
+        input.click();
+      }
+      input.addEventListener("change", () => {
+        fileNameExtracter();
+        uploadConfirmationBtns.classList.remove("hidden");
+      });
+
+      function upload_Remove(e) {
+            if (e) e.stopPropagation();
+        form.reset()
+        input.value = "";
+        span.textContent = "";
+        SelectedFile.classList.add("hidden");
+        uploadConfirmationBtns.classList.add("hidden");
+      }
+    </script>
+  </body>
+</html>

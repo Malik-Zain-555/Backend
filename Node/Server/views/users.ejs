@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Users</title>
+    <link rel="stylesheet" href="index.css" />
+    <style>
+      .users-container {
+        border: 5px solid orangered;
+        width: 35vw;
+        margin: auto;
+        padding: 1rem;
+        border-radius: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.8rem;
+      }
+      .user {
+        width: 80%;
+        border-radius: 20px;
+        padding: 0.5rem 1rem;
+        border: 2px solid orange;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+      }
+      .changing-username {
+        background-color: rgb(32, 31, 31);
+        padding: 1rem;
+        border-radius: 20px;
+        position: absolute;
+        top: 0;
+        /* display: flex; */
+        display: none;
+        gap: 8px;
+        flex-direction: column;
+      }
+      .delete-btn,
+      .cancle-btn {
+        background-color: crimson;
+        color: white;
+        font-weight: 500;
+        cursor: pointer;
+      }
+      .delete-btn:hover,
+      .cancle-btn:hover {
+        background-color: darkred;
+      }
+      .edit-btn {
+        background-color: rgb(23, 179, 23);
+        color: white;
+        font-weight: 500;
+        cursor: pointer;
+      }
+      .edit-btn:hover {
+        background-color: darkgreen;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <ul>
+        <li><a href="/"> Home </a></li>
+        <li><a href="/profile"> Profile </a></li>
+        <li><a href="/about"> About </a></li>
+        <li><a href="/signup"> Sign Up </a></li>
+        <li><a href="/users"> Users </a></li>
+      </ul>
+    </nav>
+    <center>
+      <h1>Available User</h1>
+    </center>
+    <div class="users-container">
+      <% if(users.length > 0) {%> <% users.forEach((user)=>{ %>
+      <div class="user">
+        <div class="left">
+          <h3><%=user.username %></h3>
+          <p><%=user.email %></p>
+        </div>
+        <div class="right">
+          <button class="edit-btn">Edit</button>
+          <form
+            hidden
+            class="changing-username"
+            action="/users/update/<%=user.id%>"
+            method="post"
+          >
+            <input
+              required
+              type="text"
+              placeholder="change username"
+              name="username"
+            />
+            <button type="submit" class="change-btn">Change</button>
+            <button type="button" class="cancle-btn">Cancle</button>
+          </form>
+          <a href="/users/delete/<%=user.id%>"
+            ><button type="submit" class="delete-btn">Delete</button></a
+          >
+        </div>
+      </div>
+
+      <%}) %> <% } else{ %>
+      <div>
+        <h3 style="color: rgb(165, 114, 96);">No User Available</h3>
+      </div>
+      <% } %>
+    </div>
+    <script>
+      document.querySelectorAll(".user").forEach((userDiv) => {
+        const editBtn = userDiv.querySelector(".edit-btn");
+        const changeDiv = userDiv.querySelector(".changing-username");
+        const cancelBtn = userDiv.querySelector(".cancle-btn");
+
+        editBtn.addEventListener("click", () => {
+          changeDiv.style.display = "flex";
+        });
+
+        cancelBtn.addEventListener("click", () => {
+          changeDiv.style.display = "none";
+        });
+      });
+    </script>
+  </body>
+</html>

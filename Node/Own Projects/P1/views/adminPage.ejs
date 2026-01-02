@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="/sheets/login.css">
+</head>
+<body class="bg-gray-50 dark:bg-gray-900">
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <div class="w-64 bg-white dark:bg-gray-800 shadow-lg">
+            <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Admin Panel</h2>
+            </div>
+            <nav class="p-4 space-y-2">
+                <a href="#" class="block px-4 py-2 rounded bg-blue-600 text-white">Dashboard</a>
+                <a href="#" class="block px-4 py-2 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">Users</a>
+                <a href="#" class="block px-4 py-2 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">Reports</a>
+                <a href="#" class="block px-4 py-2 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">Settings</a>
+                <a href="/user/adminlogout" class="block px-4 py-2 rounded text-gray-700 dark:text-gray-300 hover:bg-red-100 dark:hover:bg-red-900">Logout</a>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 overflow-auto">
+            <!-- Top Bar -->
+            <div class="bg-white dark:bg-gray-800 shadow p-6 border-b border-gray-200 dark:border-gray-700">
+                <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Dashboard</h1>
+                <p class="text-gray-600 dark:text-gray-400">Welcome back, Administrator</p>
+            </div>
+
+            <!-- Widgets -->
+            <div class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                    <h3 class="text-gray-600 dark:text-gray-400 text-sm font-semibold">Total Users</h3>
+                    <p class="text-3xl font-bold text-gray-900 dark:text-white mt-2">1,234</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                    <h3 class="text-gray-600 dark:text-gray-400 text-sm font-semibold">Active Sessions</h3>
+                    <p class="text-3xl font-bold text-gray-900 dark:text-white mt-2">56</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                    <h3 class="text-gray-600 dark:text-gray-400 text-sm font-semibold">System Status</h3>
+                    <p class="text-3xl font-bold text-green-600 mt-2">Online</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                    <h3 class="text-gray-600 dark:text-gray-400 text-sm font-semibold">Last Updated</h3>
+                    <p class="text-sm text-gray-900 dark:text-white mt-2">5 minutes ago</p>
+                </div>
+            </div>
+
+            <!-- Content Section -->
+            <div class="p-6">
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                    <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Recent Activity</h2>
+                    <table class="w-full text-sm">
+                        <thead class="border-b border-gray-200 dark:border-gray-700">
+                            <tr>
+                                <th class="text-left py-2 text-gray-600 dark:text-gray-400">User</th>
+                                <th class="text-left py-2 text-gray-600 dark:text-gray-400">Action</th>
+                                <th class="text-left py-2 text-gray-600 dark:text-gray-400">Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b border-gray-100 dark:border-gray-700">
+                                <td class="py-3 text-gray-900 dark:text-white">John Doe</td>
+                                <td class="py-3 text-gray-600 dark:text-gray-400">Login</td>
+                                <td class="py-3 text-gray-600 dark:text-gray-400">2 hours ago</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
