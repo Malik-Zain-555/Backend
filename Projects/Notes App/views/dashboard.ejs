@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+      .scrollbox {
+        overflow: auto;
+        scrollbar-width: thin; /* Firefox */
+        scrollbar-color: rgb(129, 128, 128) transparent;
+      }
+
+      /* Chrome/Edge/Safari */
+      .scrollbox::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      .scrollbox::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .scrollbox::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.22);
+        border-radius: 999px;
+        border: 2px solid transparent;
+        background-clip: content-box;
+      }
+      .scrollbox::-webkit-scrollbar-thumb:hover {
+        background: rgba(0, 0, 0, 0.35);
+        background-clip: content-box;
+      }
+    </style>
+  </head>
+  <body class="overflow-y-hidden">
+    <div
+      class="main bg-zinc-800 w-full h-screen p-5 flex"
+    >
+      <div
+        class="sideBar w-[20%] h-full bg-zinc-600"
+      ></div>
+      <div class="rightSide w-full flex flex-col px-5 gap-5">
+        <div
+          class="navBar bg-zinc-600 w-[60%] m-auto flex justify-between p-5 rounded-lg text-zinc-200"
+        >
+          <h5>All Notes</h5>
+          <h5>Create</h5>
+        </div>
+        <div
+          class="notes w-full scrollbox h-full border-6 border-zinc-400 rounded-lg flex flex-wrap gap-5 overflow-y-auto scroll-0 p-5"
+        >
+          <div class="noteCard w-[40%] h-[50%] bg-zinc-500 rounded-lg"></div>
+          <div class="noteCard w-[40%] h-[50%] bg-zinc-500 rounded-lg"></div>
+          <div class="noteCard w-[40%] h-[50%] bg-zinc-500 rounded-lg"></div>
+          <div class="noteCard w-[40%] h-[50%] bg-zinc-500 rounded-lg"></div>
+          <div class="noteCard w-[40%] h-[50%] bg-zinc-500 rounded-lg"></div>
+          <div class="noteCard w-[40%] h-[50%] bg-zinc-500 rounded-lg"></div>
+          <div class="noteCard w-[40%] h-[50%] bg-zinc-500 rounded-lg"></div>
+          <div class="noteCard w-[40%] h-[50%] bg-zinc-500 rounded-lg"></div>
+          <div class="noteCard w-[40%] h-[50%] bg-zinc-500 rounded-lg"></div>
+          <div class="noteCard w-[40%] h-[50%] bg-zinc-500 rounded-lg"></div>
+          <div class="noteCard w-[40%] h-[50%] bg-zinc-500 rounded-lg"></div>
+          <div class="noteCard w-[40%] h-[50%] bg-zinc-500 rounded-lg"></div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
