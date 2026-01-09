@@ -6,9 +6,9 @@
     <title>Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link
-    href="https://cdn.jsdelivr.net/npm/remixicon@4.8.0/fonts/remixicon.css"
-    rel="stylesheet"
-/>
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.8.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
     <style>
       .scrollbox {
         overflow: auto;
@@ -51,29 +51,39 @@
             Create
           </h5>
         </div>
-        <div class="notes relative w-full scrollbox h-full border-6 border-zinc-400 rounded-lg grid grid-cols-1 md:grid-cols-2 gap-5 overflow-y-auto p-5">
-          <% if(note.length != 0){ %>
-          <% allNotes.forEach((note)=>{ %>
-          <div class="noteCard w-full h-56 bg-zinc-500 rounded-lg p-5 flex flex-col gap-3">
+        <div
+          class="notes relative w-full scrollbox h-full border-6 border-zinc-400 rounded-lg grid grid-cols-1 md:grid-cols-2 gap-5 overflow-y-auto p-5"
+        >
+          <% if(allNotes.length > 0 && allNotes ){ %> <%
+          allNotes.forEach((note)=> { %>
+          <div
+            class="noteCard w-full h-56 bg-zinc-500 rounded-lg p-5 flex flex-col gap-3"
+          >
             <div
               class="noteTitleDiv flex justify-between border-b-2 border-zinc-400 pb-2"
             >
-            <h5 class="noteTitle text-zinc-950 font-semibold text-xl">
-              <%= note.title %>
-            </h5>
-            <div class="btns">
-              <i class="border-2 border-zinc-600 px-3 py-2 rounded-lg text-zinc-200 cursor-pointer bg-green-600 hover:bg-green-700  ri-pencil-fill"></i>
-              <a href="dashboard/delete/<%= note._id %>"><i class="border-2 border-zinc-600 px-3 py-2 rounded-lg text-zinc-200 cursor-pointer bg-red-600 hover:bg-red-700 ri-delete-bin-5-line"></i></a>
-            </div>
+              <h5 class="noteTitle text-zinc-950 font-semibold text-xl">
+                <%= note.title %>
+              </h5>
+              <div class="btns">
+                <i
+                  class="editBtn border-2 border-zinc-600 px-3 py-2 rounded-lg text-zinc-200 cursor-pointer bg-green-600 hover:bg-green-700 ri-pencil-fill"
+                ></i>
+                <a href="dashboard/delete/<%= note._id %>">
+                  <i
+                    class="border-2 border-zinc-600 px-3 py-2 rounded-lg text-zinc-200 cursor-pointer bg-red-600 hover:bg-red-700 ri-delete-bin-5-line"
+                  ></i
+                ></a>
+              </div>
             </div>
             <p class="text-zinc-900 overflow-y-auto"><%= note.description %></p>
           </div>
-          <div id="newNoteForm" class="hidden absolute top-2 right-2">
+          <div id="editNoteForm" class="hidden absolute top-2 right-2">
             <form
-              id="createForm"
-              action="dashboard/create"
+              id="editForm"
+              action="dashboard/edit/<%= note._id %>"
               method="post"
-              class="createForm flex flex-col gap-5 bg-zinc-500 p-5 rounded-lg"
+              class="editForm flex flex-col gap-5 bg-indigo-500 shadow-xl shadow-black p-5 rounded-lg"
             >
               <input
                 class="bg-zinc-200 outline-none rounded-lg px-3 py-1"
@@ -103,9 +113,44 @@
               </div>
             </form>
           </div>
-          <%} else{ %>
+          <% }) %> <% } else{ %>
           <div class="noNotes">There is no notes created yet!</div>
-          <%}})%>
+          <% } %>
+          <div id="newNoteForm" class="hidden absolute top-2 right-2">
+            <form
+              id="createForm"
+              action="/notes/dashboard/create"
+              method="post"
+              class="createForm flex flex-col gap-5 bg-orange-500 shadow-xl shadow-black p-5 rounded-lg"
+            >
+              <input
+                class="bg-zinc-200 outline-none rounded-lg px-3 py-1"
+                type="text"
+                placeholder="title"
+                name="title"
+              />
+              <textarea
+                class="bg-zinc-200 outline-none rounded-lg px-3 resize-none h-28 py-1"
+                type="text"
+                placeholder="description"
+                name="description"
+              ></textarea>
+              <div class="btns flex gap-2 justify-between">
+                <input
+                  id="cancleBtn"
+                  value="cancle"
+                  type="button"
+                  class="w-1/2 text-center bg-red-600 text-white px-3 py-1 cursor-pointer rounded-lg hover:bg-red-700"
+                />
+                <input
+                  id="confirmBtn"
+                  value="confirm"
+                  type="submit"
+                  class="w-1/2 text-center bg-green-600 text-white px-3 py-1 cursor-pointer rounded-lg hover:bg-green-700"
+                />
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>
