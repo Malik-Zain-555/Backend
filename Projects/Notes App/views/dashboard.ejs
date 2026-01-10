@@ -78,10 +78,9 @@
             </div>
             <p class="text-zinc-900 overflow-y-auto"><%= note.description %></p>
           </div>
-          <div id="editNoteForm" class="hidden absolute top-2 right-2">
+          <div class="editNoteForm hidden absolute top-2 right-2">
             <form
-              id="editForm"
-              action="dashboard/edit/<%= note._id %>"
+              action="/notes/dashboard/edit/<%= note._id %>"
               method="post"
               class="editForm flex flex-col gap-5 bg-indigo-500 shadow-xl shadow-black p-5 rounded-lg"
             >
@@ -99,16 +98,14 @@
               ></textarea>
               <div class="btns flex gap-2 justify-between">
                 <input
-                  id="cancleBtn"
                   value="cancle"
                   type="button"
-                  class="w-1/2 text-center bg-red-600 text-white px-3 py-1 cursor-pointer rounded-lg hover:bg-red-700"
+                  class="cancleBtn w-1/2 text-center bg-red-600 text-white px-3 py-1 cursor-pointer rounded-lg hover:bg-red-700"
                 />
                 <input
-                  id="confirmBtn"
                   value="confirm"
                   type="submit"
-                  class="w-1/2 text-center bg-green-600 text-white px-3 py-1 cursor-pointer rounded-lg hover:bg-green-700"
+                  class="confirmBtn w-1/2 text-center bg-green-600 text-white px-3 py-1 cursor-pointer rounded-lg hover:bg-green-700"
                 />
               </div>
             </form>
@@ -137,16 +134,14 @@
               ></textarea>
               <div class="btns flex gap-2 justify-between">
                 <input
-                  id="cancleBtn"
                   value="cancle"
                   type="button"
-                  class="w-1/2 text-center bg-red-600 text-white px-3 py-1 cursor-pointer rounded-lg hover:bg-red-700"
+                  class="cancleBtn w-1/2 text-center bg-red-600 text-white px-3 py-1 cursor-pointer rounded-lg hover:bg-red-700"
                 />
                 <input
-                  id="confirmBtn"
                   value="confirm"
                   type="submit"
-                  class="w-1/2 text-center bg-green-600 text-white px-3 py-1 cursor-pointer rounded-lg hover:bg-green-700"
+                  class="confirmBtn w-1/2 text-center bg-green-600 text-white px-3 py-1 cursor-pointer rounded-lg hover:bg-green-700"
                 />
               </div>
             </form>

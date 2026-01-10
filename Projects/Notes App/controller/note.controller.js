@@ -6,16 +6,26 @@ exports.createNote = async (req, res) => {
     title,
     description,
   });
-  const allNotes = await noteModle.find();
+  await noteModle.find();
   res.redirect("/notes/dashboard");
 };
 
 exports.editNote = async (req, res) => {
-  const { _id } = req.body;
-  const allNotes = await noteModle.findByIdAndUpdate({
-    _id,
-  },{
-    
-  });
-  res.render("dashboard");
+  const { title, description } = req.body;
+  const _id = req.params._id;
+  await noteModle.findByIdAndUpdate(
+    {
+      _id,
+    },
+    {
+      title,
+      description,
+    }
+  );
+
+  console.log("Title ", title);
+  console.log("description ", description);
+  console.log("_id ", _id);
+
+  res.redirect("/notes/dashboard");
 };
