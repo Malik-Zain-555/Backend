@@ -1,8 +1,10 @@
 exports.loggerMiddleware = (req, res, next) => {
-  if (req.body === "admin") {
-    console.log("Users are not allowed! at", req.url);
-    return;
+  const apikey = req.headers["x-api-key"];
+  if (apikey !== "admin") {
+    const error = new Error("Unauthorized user");
+    error.status = 401;
+    return next(error);
   }
-  console.log("Admin Logged In! at", req.url);
+  console.log("Admin allowed at", req.url);
   next();
 };
