@@ -22,6 +22,7 @@ const userSchema = mongoose.Schema({
     default: false,
   },
   verificationToken: String,
+  resetToken: String,
 });
 
 userSchema.pre("save", async function () {

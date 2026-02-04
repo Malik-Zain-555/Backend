@@ -6,9 +6,19 @@ const jwt = require("jsonwebtoken");
 const authMiddleware = require("../middlewares/authMiddleware");
 const crypto = require("crypto");
 const sendEmail = require("../utils/sendEmail");
+const resetPasswordEmail = require("../utils/passwordResetEmail");
 
 router.get("/login", (req, res) => {
   res.render("login");
+});
+router.get("/resetPassword", (req, res) => {
+  res.render("resetPassword");
+});
+router.get("/resettoken", (req, res) => {
+  res.render("resettoken");
+});
+router.get("/changepassword", (req, res) => {
+  res.render("changepassword");
 });
 router.get("/signup", (req, res) => {
   res.render("signup");
@@ -49,6 +59,61 @@ router.post("/login", async (req, res) => {
   });
 
   res.redirect("/app/dashboard");
+});
+
+const resetUrl = "http://localhost:3000/auth/resettoken";
+
+router.post("/resetpassword", async (req, res) => {
+  const { email } = req.body;
+  const user = await userModel.findOne({ email });
+
+  if (!user) {
+    return res.json({
+      message: "User isn't existed!.",
+    });
+  }
+
+  const rt = crypto.randomBytes(5).toString("hex");
+
+  user.resetToken = rt;
+  await user.save();
+
+  await resetPasswordEmail(
+    email,
+    "Reset Your Password",
+    `<h2>Copy Reset token below: </h2>
+    <h2>${rt}</h2>
+    <a href="${resetUrl}">Reset Password</a>`,
+  );
+
+  res.send("Reset Mail Sended!");
+});
+
+router.post("/resettoken", async (req, res) => {
+  const { token } = req.body;
+  const user = await userModel.findOne({ resetToken: token });
+
+  if (!user)
+    return res.json({
+      message: "Your reset isn't existed or wrong.",
+    });
+
+  res.render("changepassword", { token });
+});
+
+router.post("/changepassword", async (req, res) => {
+  const { token, newpassword } = req.body;
+
+  const user = await userModel.findOne({
+    resetToken: token,
+  });
+
+  user.password = newpassword;
+  user.resetToken = undefined;
+
+  await user.save();
+
+  res.redirect("/auth/login");
 });
 
 router.post("/signup", async (req, res) => {
