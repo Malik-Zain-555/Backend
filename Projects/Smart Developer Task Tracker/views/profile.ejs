@@ -1,0 +1,87 @@
+<%
+// Dummy user data for development/demo purposes
+const user = {
+    name: 'Jane Doe',
+    email: 'jane.doe@example.com',
+    role: 'Developer',
+    phone: '+1 (555) 123-4567',
+    location: 'San Francisco, CA',
+    bio: 'Passionate developer with 5 years of experience in web applications.'
+};
+%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; }
+        .profile-container {
+            max-width: 400px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 32px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 16px;
+            border: 3px solid #0078d7;
+        }
+        .profile-info h2 {
+            margin: 0 0 8px 0;
+        }
+        .profile-info p {
+            color: #555;
+            margin: 4px 0;
+        }
+        .edit-btn {
+            margin-top: 20px;
+            padding: 10px 24px;
+            background: #0078d7;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .edit-btn:hover {
+            background: #005fa3;
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <img class="avatar" src="https://i.pinimg.com/originals/70/ac/e6/70ace62faf44bd58437a7d78e81a7ee1.jpg" alt="Avatar">
+        <div class="profile-info">
+            <h2><%= user.name %></h2>
+            <p><strong>Email:</strong> <%= user.email %></p>
+            <p><strong>Role:</strong> <%= user.role %></p>
+            <p><strong>Phone:</strong> <%= user.phone %></p>
+            <p><strong>Location:</strong> <%= user.location %></p>
+            <p><strong>Bio:</strong> <%= user.bio %></p>
+        </div>
+        <form action="/profile/edit" method="get">
+            <button class="edit-btn" type="submit">Edit Profile</button>
+        </form>
+    </div>
+</body>
+</html>
+<script>
+    // Dummy data for demonstration (remove when integrating with backend)
+    // This script is only for front-end preview purposes.
+    if (!window.location.search.includes('real')) {
+        document.querySelector('.avatar').src = '/images/default-avatar.png';
+        document.querySelector('.profile-info h2').textContent = 'Jane Doe';
+        document.querySelector('.profile-info p:nth-child(2)').innerHTML = '<strong>Email:</strong> jane.doe@example.com';
+        document.querySelector('.profile-info p:nth-child(3)').innerHTML = '<strong>Role:</strong> Developer';
+        document.querySelector('.profile-info p:nth-child(4)').innerHTML = '<strong>Phone:</strong> +1 (555) 123-4567';
+        document.querySelector('.profile-info p:nth-child(5)').innerHTML = '<strong>Location:</strong> San Francisco, CA';
+        document.querySelector('.profile-info p:nth-child(6)').innerHTML = '<strong>Bio:</strong> Passionate developer with 5 years of experience in web applications.';
+    }
+</script>

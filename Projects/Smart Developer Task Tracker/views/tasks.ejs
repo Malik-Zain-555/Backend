@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Task Tracker - Tasks</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f4f6f9;
+    }
+
+    header {
+      background-color: #111827;
+      color: white;
+      padding: 15px 30px;
+      font-size: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .container {
+      padding: 30px;
+    }
+
+    .task-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .task-card {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+      transition: 0.2s ease;
+    }
+
+    .task-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .task-title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .task-info {
+      font-size: 14px;
+      margin: 6px 0;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      margin-right: 6px;
+    }
+
+    .pending { background: #facc15; }
+    .in-progress { background: #60a5fa; }
+    .completed { background: #34d399; }
+
+    .low { background: #d1fae5; }
+    .medium { background: #fde68a; }
+    .high { background: #fca5a5; }
+
+    .progress-bar {
+      background: #e5e7eb;
+      height: 8px;
+      border-radius: 20px;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+
+    .progress-fill {
+      height: 8px;
+      background: #2563eb;
+    }
+
+    .deadline {
+      color: #dc2626;
+      font-weight: bold;
+    }
+
+    .actions {
+      margin-top: 12px;
+    }
+
+    .btn {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      margin-right: 6px;
+    }
+
+    .edit { background: #3b82f6; color: white; }
+    .delete { background: #ef4444; color: white; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div>Smart Developer Task Tracker</div>
+  <div>Welcome, Waseem</div>
+</header>
+
+<div class="container">
+  <div class="task-grid" id="taskContainer"></div>
+</div>
+
+<script>
+  const dummyTasks = [
+    {
+      taskTitle: "Build Authentication System",
+      description: "Implement register and login with JWT.",
+      status: "in-progress",
+      priority: "high",
+      deadline: "2026-02-20",
+      progressPercentage: 65,
+      createdAt: "2026-02-10"
+    },
+    {
+      taskTitle: "Design Dashboard UI",
+      description: "Create task overview page with cards.",
+      status: "pending",
+      priority: "medium",
+      deadline: "2026-02-18",
+      progressPercentage: 20,
+      createdAt: "2026-02-11"
+    },
+    {
+      taskTitle: "Database Optimization",
+      description: "Add indexes and improve query performance.",
+      status: "completed",
+      priority: "low",
+      deadline: "2026-02-05",
+      progressPercentage: 100,
+      createdAt: "2026-02-01"
+    }
+  ];
+
+  const container = document.getElementById("taskContainer");
+
+  dummyTasks.forEach(task => {
+    const card = document.createElement("div");
+    card.classList.add("task-card");
+
+    card.innerHTML = `
+      <div class="task-title">${task.taskTitle}</div>
+
+      <div class="task-info">
+        <span class="badge ${task.status}">${task.status}</span>
+        <span class="badge ${task.priority}">${task.priority} priority</span>
+      </div>
+
+      <div class="task-info">
+        <strong>Description:</strong> ${task.description}
+      </div>
+
+      <div class="task-info">
+        <strong>Deadline:</strong>
+        <span class="deadline">${new Date(task.deadline).toDateString()}</span>
+      </div>
+
+      <div class="task-info">
+        <strong>Progress:</strong> ${task.progressPercentage}%
+        <div class="progress-bar">
+          <div class="progress-fill" style="width:${task.progressPercentage}%"></div>
+        </div>
+      </div>
+
+      <div class="task-info">
+        <small>Created: ${new Date(task.createdAt).toDateString()}</small>
+      </div>
+
+      <div class="actions">
+        <button class="btn edit">Edit</button>
+        <button class="btn delete">Delete</button>
+      </div>
+    `;
+
+    container.appendChild(card);
+  });
+</script>
+
+</body>
+</html>

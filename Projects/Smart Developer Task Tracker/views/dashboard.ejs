@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Developer Task Tracker</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      display: flex;
+      background: #f3f4f6;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 240px;
+      background: #111827;
+      color: white;
+      height: 100vh;
+      padding: 20px;
+    }
+
+    .sidebar h2 {
+      margin-bottom: 30px;
+      font-size: 18px;
+    }
+
+    .sidebar ul {
+      list-style: none;
+    }
+
+    .sidebar ul li {
+      padding: 12px 0;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .sidebar ul li:hover {
+      color: #60a5fa;
+    }
+
+    /* Main Area */
+    .main {
+      flex: 1;
+      padding: 20px 30px;
+    }
+
+    /* Header */
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+
+    .topbar h1 {
+      font-size: 22px;
+    }
+
+    .stats {
+      display: flex;
+      gap: 15px;
+    }
+
+    .stat-box {
+      background: white;
+      padding: 12px 18px;
+      border-radius: 8px;
+      font-size: 14px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+
+    .create-btn {
+      background: #3b82f6;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .create-btn:hover {
+      background: #2563eb;
+    }
+
+    /* Board Layout */
+    .board {
+      display: flex;
+      gap: 20px;
+      overflow-x: auto;
+    }
+
+    .column {
+      background: #e5e7eb;
+      padding: 15px;
+      border-radius: 10px;
+      width: 280px;
+      flex-shrink: 0;
+      min-height: 400px;
+    }
+
+    .column h3 {
+      margin-bottom: 15px;
+      font-size: 16px;
+    }
+
+    .column.drag-over {
+      background: #bfdbfe;
+    }
+
+    .task-card {
+      background: white;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      font-size: 13px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      cursor: grab;
+    }
+
+    .task-card:active {
+      cursor: grabbing;
+    }
+
+    .task-card.dragging {
+      opacity: 0.5;
+    }
+
+    .priority {
+      font-size: 11px;
+      padding: 3px 6px;
+      border-radius: 12px;
+      display: inline-block;
+      margin-top: 5px;
+    }
+
+    .high {
+      background: #fecaca;
+    }
+
+    .medium {
+      background: #fde68a;
+    }
+
+    .low {
+      background: #bbf7d0;
+    }
+
+    .blocked {
+      font-size: 11px;
+      color: #dc2626;
+      margin-top: 5px;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .modal-header {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .radio-group {
+      display: flex;
+      gap: 20px;
+    }
+
+    .radio-group label {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0;
+      cursor: pointer;
+    }
+
+    .radio-group input[type="radio"] {
+      width: auto;
+      margin-right: 8px;
+    }
+
+    .dependent-field {
+      display: none;
+    }
+
+    .dependent-field.show {
+      display: block;
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 25px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .btn-primary {
+      background: #3b82f6;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #2563eb;
+    }
+
+    .btn-secondary {
+      background: #e5e7eb;
+      color: #374151;
+    }
+
+    .btn-secondary:hover {
+      background: #d1d5db;
+    }
+
+    /* Task Preview Overlay */
+    .task-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(5px);
+      display: flex;
+      justify-content: flex-end;
+      opacity: 0;
+      visibility: hidden;
+      transition: 0.3s ease;
+      z-index: 2000;
+    }
+
+    .task-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Right Side Panel */
+    .task-preview {
+      width: 400px;
+      height: 100%;
+      background: white;
+      padding: 25px;
+      transform: translateX(100%);
+      transition: 0.3s ease;
+      box-shadow: -10px 0 30px rgba(0, 0, 0, 0.2);
+      overflow-y: auto;
+    }
+
+    .task-overlay.active .task-preview {
+      transform: translateX(0);
+    }
+
+    .preview-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .preview-header button {
+      background: none;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    .badge {
+      font-size: 12px;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-weight: bold;
+    }
+
+    .status-badge {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    .priority-badge.high {
+      background: #fecaca;
+      color: #991b1b;
+    }
+
+    .priority-badge.medium {
+      background: #fde68a;
+      color: #92400e;
+    }
+
+    .priority-badge.low {
+      background: #bbf7d0;
+      color: #065f46;
+    }
+
+    .btn-danger {
+      background: #ef4444;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #dc2626;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="sidebar">
+    <h2>Smart Tracker</h2>
+    <ul>
+      <li>Dashboard</li>
+      <li>My Tasks</li>
+      <li>Blocked Tasks</li>
+      <li>Overdue</li>
+      <li>Analytics</li>
+      <li>Settings</li>
+    </ul>
+  </div>
+
+  <div class="main">
+    <div class="topbar">
+      <h1>Developer Workflow Board</h1>
+      <div class="stats">
+      <div class="stat-box">Total: 9</div>
+      <div class="stat-box">Completed: 3</div>
+      <div class="stat-box">Blocked: 2</div>
+      <div class="stat-box">Overall Progress: 58%</div>
+      <button class="create-btn" onclick="openTaskModal()">
+        + New Task
+      </button>
+      </div>
+    </div>
+
+    <div class="board">
+
+
+      <!-- Pending -->
+
+
+      <div class="column" data-column="pending">
+
+      <h3>Pending</h3>
+
+      <% tasks.forEach((task)=>{ %>
+      <% if(task.status === "pending"){ %>
+      <div class="task-card" draggable="true" data-title="<%= task.taskTitle %>" data-description="<%= task.description %>" data-priority="<%= task.priority %>" data-deadline="<%= task.deadline %>" data-created="<%= task.createdAt %>" data-status="<%= task.status %>">
+        <%= task.taskTitle %>
+        <div class="priority <%= task.priority %>">
+        <%= task.priority %>
+        </div>
+        <div class="remainingTime">
+        <%= new Date(task.deadline) > new Date() ? Math.floor((new Date(task.deadline) - new Date()) / (1000 * 60 * 60 * 24)) + 'd ' + Math.floor(((new Date(task.deadline) - new Date()) % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)) + 'h remaining' : 'Overdue' %>
+        </div>
+      </div>
+      <% } %>
+      <% }) %>
+
+      </div>
+
+      <!-- In Progress -->
+      <div class="column" data-column="in-progress">
+      <h3>In Progress</h3>
+      <% tasks.forEach((task)=>{ %>
+      <% if(task.status === "in-progress"){ %>
+      <div class="task-card" draggable="true" data-title="<%= task.taskTitle %>" data-description="<%= task.description %>" data-priority="<%= task.priority %>" data-deadline="<%= task.deadline %>" data-created="<%= task.createdAt %>" data-status="<%= task.status %>">
+        <%= task.taskTitle %>
+        <div class="priority <%= task.priority %>">
+        <%= task.priority %>
+        </div>
+        <div class="remainingTime">
+        <%= new Date(task.deadline) > new Date() ? Math.floor((new Date(task.deadline) - new Date()) / (1000 * 60 * 60 * 24)) + 'd ' + Math.floor(((new Date(task.deadline) - new Date()) % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)) + 'h remaining' : 'Overdue' %>
+        </div>
+      </div>
+
+      <% } %>
+      <% }) %>
+      </div>
+
+
+      <!-- Blocked -->
+
+      <div class="column" data-column="blocked">
+      <h3>Blocked</h3>
+      <% tasks.forEach((task)=>{ %>
+      <% if(task.status === "blocked"){ %>
+
+      <div class="task-card" draggable="true" data-title="<%= task.taskTitle %>" data-description="<%= task.description %>" data-priority="<%= task.priority %>" data-deadline="<%= task.deadline %>" data-created="<%= task.createdAt %>" data-status="<%= task.status %>">
+        <%= task.taskTitle %>
+        <div class="priority <%= task.priority %>">
+        <%= task.priority %>
+        </div>
+        <div class="remainingTime">
+        <%= new Date(task.deadline) > new Date() ? Math.floor((new Date(task.deadline) - new Date()) / (1000 * 60 * 60 * 24)) + 'd ' + Math.floor(((new Date(task.deadline) - new Date()) % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)) + 'h remaining' : 'Overdue' %>
+        </div>
+      </div>
+
+      <% } %>
+      <% }) %>
+      </div>
+
+
+      <!-- Completed -->
+
+      <div class="column" data-column="completed">
+      <h3>Completed</h3>
+      <% tasks.forEach((task)=>{ %>
+      <% if(task.status === "completed"){ %>
+
+      <div class="task-card" draggable="true" data-title="<%= task.taskTitle %>" data-description="<%= task.description %>" data-priority="<%= task.priority %>" data-deadline="<%= task.deadline %>" data-created="<%= task.createdAt %>" data-status="<%= task.status %>">
+        <%= task.taskTitle %>
+        <div class="priority <%= task.priority %>">
+        <%= task.priority %>
+        </div>
+      </div>
+
+      <% } %>
+      <% }) %>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Modal -->
+  <div class="modal" id="taskModal">
+    <div class="modal-content">
+      <div class="modal-header">Create New Task</div>
+
+      <form id="taskForm" method="POST" action="/app/newtask">
+        <div class="form-group">
+          <label>Task Name *</label>
+          <input type="text" id="taskName" name="title" required placeholder="Enter task name" />
+        </div>
+
+        <div class="form-group">
+          <label>Description</label>
+          <textarea id="taskDesc" name="description" placeholder="Enter task description"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Priority *</label>
+          <select id="taskPriority" name="priority" required>
+            <option value="">Select Priority</option>
+            <option value="high">High</option>
+            <option value="medium">Medium</option>
+            <option value="low">Low</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Deadline</label>
+          <input type="date" id="taskDeadline" name="deadline" />
+        </div>
+
+        <div class="form-group">
+          <label>Task Type *</label>
+          <div class="radio-group">
+            <label>
+              <input type="radio" name="taskType" value="solo" checked onchange="toggleDependency()" />
+              Solo Task
+            </label>
+            <label>
+              <input type="radio" name="taskType" value="dependent" onchange="toggleDependency()" />
+              Dependent Task
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group dependent-field" id="dependencyField">
+          <label>Depends On *</label>
+          <select id="dependentTask" name="dependencies">
+            <option value="">Select Task</option>
+            <% tasks.forEach((task)=>{ %>
+            <option value="<%= task.taskTitle %>"><%= task.taskTitle %></option>
+            <% }) %>
+          </select>
+        </div>
+
+        <div class="modal-buttons">
+          <button type="button" class="btn btn-secondary" onclick="closeTaskModal()">
+            Cancel
+          </button>
+          <button type="submit" class="btn btn-primary">Create Task</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Task Detail Preview Sidebar -->
+  <div class="task-overlay" id="taskOverlay">
+    <div class="task-preview">
+
+      <div class="preview-header">
+        <h2 id="previewTitle">Task Title</h2>
+        <button onclick="closePreview()">✕</button>
+      </div>
+
+      <!-- Status + Priority -->
+      <div style="display:flex; gap:10px; margin-bottom:15px;">
+        <span id="previewStatusBadge" class="badge status-badge">
+          in-progress
+        </span>
+        <span id="previewPriorityBadge" class="badge priority-badge">
+          high priority
+        </span>
+      </div>
+
+      <div style="margin-bottom:15px;">
+        <strong>Description:</strong>
+        <p id="previewDescription" style="margin-top:5px;">
+          No description available.
+        </p>
+      </div>
+
+      <p>
+        <strong>Deadline:</strong>
+        <span id="previewDeadline" style="color:red;">
+          Not set
+        </span>
+      </p>
+
+      <p style="margin-top:10px;">
+        <strong>Progress:</strong>
+        <span id="previewProgressText">0%</span>
+      </p>
+
+      <!-- Progress Bar -->
+      <div style="background:#e5e7eb; height:8px; border-radius:5px; margin-top:6px;">
+        <div id="previewProgressBar" style="height:8px; width:0%; background:#3b82f6; border-radius:5px;">
+        </div>
+      </div>
+
+      <p style="margin-top:15px; font-size:13px; color:gray;">
+        Created: <span id="previewCreatedDate">N/A</span>
+      </p>
+
+      <!-- Buttons -->
+      <div style="display:flex; gap:10px; margin-top:20px;">
+        <button class="btn btn-primary" style="flex:1;">Edit</button>
+        <button class="btn btn-danger" style="flex:1;">Delete</button>
+      </div>
+
+    </div>
+  </div>
+
+
+  <script>
+    // ===============================
+    // Task Preview + Drag Control
+    // ===============================
+
+    const previewOverlay = document.getElementById("taskOverlay");
+    const taskCards = document.querySelectorAll(".task-card");
+    const columns = document.querySelectorAll(".column");
+
+    let isDragging = false;
+
+    taskCards.forEach((card) => {
+
+      // DRAG START
+      card.addEventListener("dragstart", () => {
+        isDragging = true;
+        card.classList.add("dragging");
+      });
+
+      // DRAG END
+      card.addEventListener("dragend", () => {
+        setTimeout(() => {
+          isDragging = false;
+          card.classList.remove("dragging");
+        }, 50);
+      });
+
+      card.addEventListener("click", function() {
+        if (isDragging) return;
+
+        const title = this.dataset.title;
+        const description = this.dataset.description || "No description";
+        const priority = this.dataset.priority || "low";
+        const status = this.dataset.status;
+
+        // Date Format
+
+        function formatDate(dateString) {
+          if (!dateString) return "Not set";
+
+          const date = new Date(dateString);
+
+          return date.toLocaleDateString("en-PK", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+          });
+        }
+
+        const deadline = formatDate(this.dataset.deadline);
+        const createdAt = formatDate(this.dataset.created);
+
+
+
+        // Title
+        document.getElementById("previewTitle").textContent = title;
+
+        // Description
+        document.getElementById("previewDescription").textContent = description;
+
+        // Status badge
+        const statusBadge = document.getElementById("previewStatusBadge");
+        statusBadge.textContent = status;
+
+        // Priority badge
+        const priorityBadge = document.getElementById("previewPriorityBadge");
+        priorityBadge.textContent = priority + " priority";
+        priorityBadge.className = "badge priority-badge " + priority;
+
+        // Deadline
+        document.getElementById("previewDeadline").textContent = deadline;
+
+        // Created date
+        document.getElementById("previewCreatedDate").textContent = createdAt;
+
+        // Progress
+        let progress =
+          status === "completed" ?
+          100 :
+          status === "in-progress" ?
+          60 :
+          status === "blocked" ?
+          20 :
+          0;
+
+        document.getElementById("previewProgressText").textContent =
+          progress + "%";
+
+        document.getElementById("previewProgressBar").style.width =
+          progress + "%";
+
+        previewOverlay.classList.add("active");
+      });
+    });
+
+    // ===============================
+    // Column Drag & Drop
+    // ===============================
+
+    columns.forEach((column) => {
+      column.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        column.classList.add("drag-over");
+      });
+
+      column.addEventListener("dragleave", () => {
+        column.classList.remove("drag-over");
+      });
+
+      column.addEventListener("drop", (e) => {
+        e.preventDefault();
+        column.classList.remove("drag-over");
+
+        const draggingCard =
+          document.querySelector(".task-card.dragging");
+
+        if (draggingCard) {
+          column.appendChild(draggingCard);
+
+          // Optional: Update status badge immediately if preview open
+          if (previewOverlay.classList.contains("active")) {
+            const newStatus = column.dataset.column;
+            document.getElementById("previewStatusBadge").textContent =
+              newStatus;
+          }
+        }
+      });
+    });
+
+    // ===============================
+    // Close Preview
+    // ===============================
+
+    function closePreview() {
+      previewOverlay.classList.remove("active");
+    }
+
+    previewOverlay.addEventListener("click", function(e) {
+      if (e.target === this) {
+        closePreview();
+      }
+    });
+
+    // ===============================
+    // Modal Controls
+    // ===============================
+
+    function openTaskModal() {
+      document.getElementById("taskModal").classList.add("active");
+    }
+
+    function closeTaskModal() {
+      document.getElementById("taskModal").classList.remove("active");
+      document.getElementById("taskForm").reset();
+    }
+
+    function toggleDependency() {
+      const type = document.querySelector(
+        'input[name="taskType"]:checked'
+      ).value;
+
+      const depField = document.getElementById("dependencyField");
+
+      if (type === "dependent") {
+        depField.classList.add("show");
+        document.getElementById("dependentTask").required = true;
+      } else {
+        depField.classList.remove("show");
+        document.getElementById("dependentTask").required = false;
+      }
+    }
+
+    document
+      .getElementById("taskModal")
+      .addEventListener("click", function(e) {
+        if (e.target === this) {
+          closeTaskModal();
+        }
+      });
+  </script>
+
+</body>
+
+</html>
